@@ -1,0 +1,36 @@
+{
+  "name": "grok-agent-platform",
+  "version": "1.0.0",
+  "description": "Grok Build + ACP + Vercel Sandbox website builder backend",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "spike:phase1": "tsx src/spikes/phase1-acp-spike.ts",
+    "spike:phase2": "tsx src/spikes/phase2-agent-spike.ts",
+    "spike:phase3": "tsx src/spikes/phase3-preview-spike.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@agentclientprotocol/sdk": "^2.7.0",
+    "@prisma/adapter-pg": "^7.10.1",
+    "@prisma/client": "^7.10.1",
+    "@vercel/sandbox": "^3.9.1",
+    "dotenv": "^18.0.10",
+    "fastify": "^5.12.8",
+    "pg": "^8.23.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/pg": "^8.23.1",
+    "prisma": "^7.10.1",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}

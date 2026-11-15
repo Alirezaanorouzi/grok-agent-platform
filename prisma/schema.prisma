@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum WorkspaceStatus {
+  ACTIVE
+  IDLE
+  ERROR
+}
+
+enum BuildRunStatus {
+  QUEUED
+  RUNNING
+  SUCCEEDED
+  FAILED
+}
+
+model Workspace {
+  id              String          @id @default(cuid())
+  userId          String
+  sandboxName     String          @unique
+  templateRepoUrl String
+  previewUrl      String?
+  status          WorkspaceStatus @default(ACTIVE)
+  lastActivityAt  DateTime        @default(now())
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  runs            BuildRun[]
+}
+
+model BuildRun {
+  id           String         @id @default(cuid())
+  workspaceId  String
+  workspace    Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  prompt       String         @db.Text
+  status       BuildRunStatus @default(QUEUED)
+  startedAt    DateTime?
+  completedAt  DateTime?
+  errorMessage String?        @db.Text
+  createdAt    DateTime       @default(now())
+  events       BuildEvent[]
+
+  @@index([workspaceId, status])
+}
+
+model BuildEvent {
+  id         String   @id @default(cuid())
+  buildRunId String
+  buildRun   BuildRun @relation(fields: [buildRunId], references: [id], onDelete: Cascade)
+  sequence   Int
+  type       String
+  payload    Json
+  createdAt  DateTime @default(now())
+
+  @@unique([buildRunId, sequence])
+  @@index([buildRunId])
+}
